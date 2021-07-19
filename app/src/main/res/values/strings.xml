@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Turtlemint</string>
+    <string name="no_issue_found">No issue found!</string>
+    <string name="no_comment_found">No comment found!</string>
+</resources>
