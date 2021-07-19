@@ -5,13 +5,13 @@
 
         <variable
             name="viewmodel"
-            type="com.turtlemint.assignment.ui.issue.IssueViewModel" />
+            type="com.appscrip.trivia.ui.issue.IssueViewModel" />
 
         <variable
             name="item"
-            type="com.turtlemint.assignment.data.db.entity.Issue" />
+            type="com.appscrip.trivia.data.db.entity.Issue" />
 
-        <import type="com.turtlemint.assignment.util.Mapper" />
+        <import type="com.appscrip.trivia.util.Mapper" />
 
         <import type="android.view.View" />
     </data>

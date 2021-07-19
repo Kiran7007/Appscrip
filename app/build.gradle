@@ -9,7 +9,7 @@ android {
     compileSdkVersion versions.compile_sdk
 
     defaultConfig {
-        applicationId "com.appscrip.assignment"
+        applicationId "com.appscrip.trivia"
         minSdkVersion versions.min_sdk
         targetSdkVersion versions.target_sdk
         multiDexEnabled true

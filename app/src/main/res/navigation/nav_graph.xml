@@ -6,7 +6,7 @@
     app:startDestination="@id/issueFragment">
     <fragment
         android:id="@+id/issueFragment"
-        android:name="com.turtlemint.assignment.ui.issue.IssueFragment"
+        android:name="com.appscrip.trivia.ui.issue.IssueFragment"
         android:label="Issues"
         tools:layout="@layout/issue_fragment" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
-        android:name="com.turtlemint.assignment.ui.comment.CommentFragment"
+        android:name="com.appscrip.trivia.ui.comment.CommentFragment"
         tools:layout="@layout/issue_fragment"
         android:label="Comments" >
         <argument

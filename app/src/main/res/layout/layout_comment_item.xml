@@ -5,13 +5,13 @@
 
         <variable
             name="viewmodel"
-            type="com.turtlemint.assignment.ui.comment.CommentViewModel" />
+            type="com.appscrip.trivia.ui.comment.CommentViewModel" />
 
         <variable
             name="item"
-            type="com.turtlemint.assignment.data.db.entity.Comment" />
+            type="com.appscrip.trivia.data.db.entity.Comment" />
 
-        <import type="com.turtlemint.assignment.util.Mapper" />
+        <import type="com.appscrip.trivia.util.Mapper" />
 
         <import type="android.view.View" />
     </data>
