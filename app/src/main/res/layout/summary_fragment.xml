@@ -6,7 +6,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.issue.IssueFragment">
+        tools:context=".ui.summary.SummaryFragment">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/purple_700"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -16,18 +31,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/layout_issue_item" />
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            tools:listitem="@layout/layout_summary_item" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_issue_found"
+            android:text="@string/no_comment_found"
             android:textColor="@color/purple_700"
-            android:visibility="gone"
             android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

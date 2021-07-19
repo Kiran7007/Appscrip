@@ -1,4 +1,4 @@
-package com.appscrip.trivia.ui.issue
+package com.appscrip.trivia.ui.summary
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,38 +7,40 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.appscrip.trivia.adapters.IssueAdapter
-import com.appscrip.trivia.databinding.IssueFragmentBinding
+import com.appscrip.trivia.adapters.SummaryAdapter
+import com.appscrip.trivia.databinding.SummaryFragmentBinding
+import com.appscrip.trivia.ui.questions.QuestionIntent
+import com.appscrip.trivia.ui.questions.QuestionState
+import com.appscrip.trivia.ui.questions.QuestionViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 /**
- * IssueFragment shows the people list.
+ * SummaryFragment shows the summary.
  */
-class IssueFragment : Fragment() {
+class SummaryFragment : Fragment() {
 
     /**
-     * IssueViewModel injected bu dependency injection.
+     * QuestionViewModel injected bu dependency injection.
      */
-    private val viewModel by viewModel<IssueViewModel>()
+    private val viewModel by sharedViewModel<QuestionViewModel>()
 
     /**
      * Binder to bind data with the view.
      */
-    private lateinit var binding: IssueFragmentBinding
+    private lateinit var binding: SummaryFragmentBinding
 
     /**
      * Converts the simple data into view and set to the recycler view.
      */
-    private lateinit var adapter: IssueAdapter
+    private lateinit var adapter: SummaryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = IssueFragmentBinding.inflate(inflater)
+        binding = SummaryFragmentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -52,13 +54,7 @@ class IssueFragment : Fragment() {
      * Initialize the view.
      */
     private fun initView() {
-        adapter = IssueAdapter(viewModel) {
-            if (!it.commentsUrl.isNullOrEmpty()) {
-                val direction =
-                    IssueFragmentDirections.actionIssueFragmentToCommentFragment(it.commentsUrl, it.title!!)
-                findNavController().navigate(direction)
-            }
-        }
+        adapter = SummaryAdapter(viewModel)
         binding.recyclerView.adapter = adapter
     }
 
@@ -67,22 +63,22 @@ class IssueFragment : Fragment() {
      */
     private fun observerState() {
         lifecycleScope.launch {
-            viewModel.state.collect {
+            viewModel.summaryState.collect {
                 when (it) {
-                    is IssueState.Idle -> {
-                        viewModel.issueIntent.send(IssueIntent.FetchLocalIssue)
+                    is QuestionState.Idle -> {
+                        viewModel.questionIntent.send(QuestionIntent.FetchSummary)
                     }
-                    is IssueState.Loading -> {
+                    is QuestionState.Loading -> {
                         if (it.isLoading) {
                             setViewVisibility(View.GONE, View.GONE, View.VISIBLE)
                         } else {
                             setViewVisibility(View.VISIBLE, View.GONE, View.GONE)
                         }
                     }
-                    is IssueState.Success -> {
+                    is QuestionState.Success -> {
                         adapter.submitList(it.list)
                     }
-                    is IssueState.Error -> {
+                    is QuestionState.Error -> {
                         setViewVisibility(View.GONE, View.VISIBLE, View.GONE)
                         it.message?.let { message -> shoToast(message) }
                     }

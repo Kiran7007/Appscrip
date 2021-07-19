@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.appscrip.trivia.data.db.entity.Comment
-import com.appscrip.trivia.databinding.LayoutCommentItemBinding
-import com.appscrip.trivia.ui.comment.CommentViewModel
+import com.appscrip.trivia.data.db.entity.Question
+import com.appscrip.trivia.databinding.LayoutQuestionItemBinding
+import com.appscrip.trivia.ui.questions.QuestionViewModel
 
 /**
- * CommentAdapter is responsible to covert people data into view by binding comment model with the view.
+ * QuestionAdapter is responsible to covert question data into view by binding Issue model with the view.
  */
-class CommentAdapter(private val viewModel: CommentViewModel) :
-    ListAdapter<Comment, CommentAdapter.ViewHolder>(CommentDiffCallBack()) {
+class QuestionAdapter(private val viewModel: QuestionViewModel) :
+    ListAdapter<Question, QuestionAdapter.ViewHolder>(QuestionDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)
 
@@ -23,16 +23,21 @@ class CommentAdapter(private val viewModel: CommentViewModel) :
     /**
      * ViewHolder binds each item to the view, the object of this class recycles.
      */
-    class ViewHolder(private val binding: LayoutCommentItemBinding) :
+    class ViewHolder(private val binding: LayoutQuestionItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         /**
-         * Bind the people model with the view.
+         * Bind the question model with the view.
          */
-        fun bind(item: Comment?, viewModel: CommentViewModel) {
+        fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)? = null
+        ) {
             item?.let {
                 binding.item = item
                 binding.viewmodel = viewModel
+                binding.root.setOnClickListener { onItemClick?.invoke(item) }
             }
         }
 
@@ -42,7 +47,7 @@ class CommentAdapter(private val viewModel: CommentViewModel) :
         companion object {
             // static method to create the instance of view holder.
             fun from(parent: ViewGroup): ViewHolder {
-                val binding = LayoutCommentItemBinding.inflate(
+                val binding = LayoutQuestionItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -53,11 +58,13 @@ class CommentAdapter(private val viewModel: CommentViewModel) :
     }
 
     /**
-     * CommentDiffCallBack replace only those items in the list which is updated.
+     * QuestionDiffCallBack replace only those items in the list which is updated.
      */
-    class CommentDiffCallBack : DiffUtil.ItemCallback<Comment>() {
-        override fun areItemsTheSame(oldItem: Comment, newItem: Comment) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Comment, newItem: Comment) = oldItem == newItem
+    class QuestionDiffCallBack : DiffUtil.ItemCallback<Question>() {
+        override fun areItemsTheSame(oldItem: Question, newItem: Question) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Question, newItem: Question) = oldItem == newItem
     }
 }
 

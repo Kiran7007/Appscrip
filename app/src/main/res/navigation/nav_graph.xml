@@ -3,26 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/issueFragment">
+    app:startDestination="@id/questionFragment">
     <fragment
-        android:id="@+id/issueFragment"
-        android:name="com.appscrip.trivia.ui.issue.IssueFragment"
-        android:label="Issues"
-        tools:layout="@layout/issue_fragment" >
+        android:id="@+id/questionFragment"
+        android:name="com.appscrip.trivia.ui.questions.QuestionFragment"
+        android:label="Questions"
+        tools:layout="@layout/question_fragment" >
         <action
-            android:id="@+id/action_issueFragment_to_commentFragment"
-            app:destination="@id/commentFragment" />
+            android:id="@+id/action_questionFragment_to_summaryFragment"
+            app:destination="@id/summaryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/commentFragment"
-        android:name="com.appscrip.trivia.ui.comment.CommentFragment"
-        tools:layout="@layout/issue_fragment"
-        android:label="Comments" >
-        <argument
-            android:name="commentUrl"
-            app:argType="string" />
-        <argument
-            android:name="title"
-            app:argType="string" />
+        android:id="@+id/summaryFragment"
+        android:name="com.appscrip.trivia.ui.summary.SummaryFragment"
+        android:label="Summary"
+        tools:layout="@layout/summary_fragment" >
+        <action
+            android:id="@+id/action_summaryFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.appscrip.trivia.ui.history.HistoryFragment"
+        tools:layout="@layout/history_fragment"
+        android:label="HistoryFragment" />
 </navigation>

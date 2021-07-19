@@ -1,18 +1,33 @@
 [
   {
-    "name": "bezkoder",
-    "age": "26",
-    "messages": [
-      "hi",
-      "My name is zKoder"
+    "id": 1,
+    "order": 1,
+    "question": "What is your name?",
+    "type": "text",
+    "options": []
+  },
+  {
+    "id": 2,
+    "order": 2,
+    "question": "Who is the best cricketer in the world?",
+    "type": "single",
+    "options": [
+      "Sachin Tendulkar",
+      "Virat Kolli",
+      "Adam Gilchirst",
+      "Jacques Kallis"
     ]
   },
   {
-    "name": "bezkoder Master",
-    "age": 30,
-    "messages": [
-      "becoming Java Master",
-      "still learning Java"
+    "id": 3,
+    "order": 3,
+    "question": "What are the colors in the Indian national flag?",
+    "type": "multi",
+    "options": [
+      "White",
+      "Yellow",
+      "Orange",
+      "Green"
     ]
   }
 ]

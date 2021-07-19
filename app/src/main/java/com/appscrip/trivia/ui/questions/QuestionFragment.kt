@@ -1,4 +1,4 @@
-package com.appscrip.trivia.ui.comment
+package com.appscrip.trivia.ui.questions
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,43 +7,40 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
-import com.appscrip.trivia.adapters.CommentAdapter
-import com.appscrip.trivia.databinding.CommentFragmentBinding
+import androidx.lifecycle.viewModelScope
+import com.appscrip.trivia.R
+import com.appscrip.trivia.adapters.QuestionAdapter
+import com.appscrip.trivia.databinding.QuestionFragmentBinding
+import com.appscrip.trivia.util.getQuestions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 /**
- * CommentFragment shows the people list.
+ * IssueFragment shows the people list.
  */
-class CommentFragment : Fragment() {
+class QuestionFragment : Fragment() {
 
     /**
-     * CommentViewModel injected bu dependency injection.
+     * IssueViewModel injected bu dependency injection.
      */
-    private val viewModel by viewModel<CommentViewModel>()
+    private val viewModel by sharedViewModel<QuestionViewModel>()
 
     /**
      * Binder to bind data with the view.
      */
-    private lateinit var binding: CommentFragmentBinding
+    private lateinit var binding: QuestionFragmentBinding
 
     /**
      * Converts the simple data into view and set to the recycler view.
      */
-    private lateinit var adapter: CommentAdapter
-
-    /**
-     * Fragment arguments.
-     */
-    private val arguments: CommentFragmentArgs by navArgs()
+    private lateinit var adapter: QuestionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CommentFragmentBinding.inflate(inflater)
+        binding = QuestionFragmentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -57,9 +54,21 @@ class CommentFragment : Fragment() {
      * Initialize the view.
      */
     private fun initView() {
-        binding.tvTitle.text = arguments.title
-        adapter = CommentAdapter(viewModel)
-        binding.recyclerView.adapter = adapter
+        adapter = QuestionAdapter(viewModel)
+        binding.viewpager.adapter = adapter
+        binding.viewpager.isUserInputEnabled = false
+        binding.btNext.setOnClickListener {
+            var currentItem = binding.viewpager.currentItem
+
+            if (currentItem < adapter.itemCount - 1) {
+                binding.viewpager.currentItem = ++currentItem
+            }
+            if (currentItem == adapter.itemCount) {
+                binding.btNext.text = getString(R.string.submit)
+            } else {
+                binding.btNext.text = getString(R.string.next)
+            }
+        }
     }
 
     /**
@@ -67,22 +76,28 @@ class CommentFragment : Fragment() {
      */
     private fun observerState() {
         lifecycleScope.launch {
-            viewModel.state.collect {
+            viewModel.questionState.collect {
                 when (it) {
-                    is CommentState.Idle -> {
-                        viewModel.commentIntent.send(CommentIntent.FetchComment(arguments.commentUrl))
+                    is QuestionState.Idle -> {
+                        viewModel.questionIntent.send(
+                            QuestionIntent.FetchQuestions(
+                                requireActivity().getQuestions(
+                                    "questions.json"
+                                )
+                            )
+                        )
                     }
-                    is CommentState.Loading -> {
+                    is QuestionState.Loading -> {
                         if (it.isLoading) {
                             setViewVisibility(View.GONE, View.GONE, View.VISIBLE)
                         } else {
                             setViewVisibility(View.VISIBLE, View.GONE, View.GONE)
                         }
                     }
-                    is CommentState.Success -> {
+                    is QuestionState.Success -> {
                         adapter.submitList(it.list)
                     }
-                    is CommentState.Error -> {
+                    is QuestionState.Error -> {
                         setViewVisibility(View.GONE, View.VISIBLE, View.GONE)
                         it.message?.let { message -> shoToast(message) }
                     }
@@ -95,7 +110,8 @@ class CommentFragment : Fragment() {
      * Update view visibility.
      */
     private fun setViewVisibility(recyclerView: Int, emptyText: Int, progressBar: Int) {
-        binding.recyclerView.visibility = recyclerView
+        binding.viewpager.visibility = recyclerView
+        binding.btNext.visibility = recyclerView
         binding.tvEmpty.visibility = emptyText
         binding.progressCircular.visibility = progressBar
     }
