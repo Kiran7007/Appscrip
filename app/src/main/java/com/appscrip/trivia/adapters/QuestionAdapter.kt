@@ -2,12 +2,23 @@ package com.appscrip.trivia.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.RadioButton
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.appscrip.trivia.data.db.entity.Question
-import com.appscrip.trivia.databinding.LayoutQuestionItemBinding
+import com.appscrip.trivia.databinding.LayoutMultiChoiceQuestionItemBinding
+import com.appscrip.trivia.databinding.LayoutSimpleQuestionItemBinding
+import com.appscrip.trivia.databinding.LayoutSingleChoiceQuestionItemBinding
 import com.appscrip.trivia.ui.questions.QuestionViewModel
+
+
+private const val SIMPLE = 1
+private const val SINGLE_CHOICE = 2
+private const val MULTI_CHOICE = 3
 
 /**
  * QuestionAdapter is responsible to covert question data into view by binding Issue model with the view.
@@ -15,7 +26,21 @@ import com.appscrip.trivia.ui.questions.QuestionViewModel
 class QuestionAdapter(private val viewModel: QuestionViewModel) :
     ListAdapter<Question, QuestionAdapter.ViewHolder>(QuestionDiffCallBack()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return when (viewType) {
+            SINGLE_CHOICE -> SingleChoiceViewHolder.from(parent)
+            MULTI_CHOICE -> MultiChoiceViewHolder.from(parent)
+            else -> SimpleViewHolder.from(parent)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position).type) {
+            "single" -> SINGLE_CHOICE
+            "multi" -> MULTI_CHOICE
+            else -> SIMPLE
+        }
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position), viewModel)
@@ -23,16 +48,38 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
     /**
      * ViewHolder binds each item to the view, the object of this class recycles.
      */
-    class ViewHolder(private val binding: LayoutQuestionItemBinding) :
+    abstract class ViewHolder(binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         /**
          * Bind the question model with the view.
          */
-        fun bind(
+        abstract fun bind(
             item: Question?,
             viewModel: QuestionViewModel,
             onItemClick: ((Question) -> Unit)? = null
+        )
+    }
+
+    private class SimpleViewHolder(private val binding: LayoutSimpleQuestionItemBinding) :
+        ViewHolder(binding) {
+
+        companion object {
+            // static method to create the instance of view holder.
+            fun from(parent: ViewGroup): SimpleViewHolder {
+                val binding = LayoutSimpleQuestionItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return SimpleViewHolder(binding)
+            }
+        }
+
+        override fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)?
         ) {
             item?.let {
                 binding.item = item
@@ -40,19 +87,74 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
                 binding.root.setOnClickListener { onItemClick?.invoke(item) }
             }
         }
+    }
 
-        /**
-         * Methods and variables in companion object are static.
-         */
+    private class SingleChoiceViewHolder(private val binding: LayoutSingleChoiceQuestionItemBinding) :
+        ViewHolder(binding) {
+
         companion object {
             // static method to create the instance of view holder.
-            fun from(parent: ViewGroup): ViewHolder {
-                val binding = LayoutQuestionItemBinding.inflate(
+            fun from(parent: ViewGroup): SingleChoiceViewHolder {
+                val binding = LayoutSingleChoiceQuestionItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
-                return ViewHolder(binding)
+                return SingleChoiceViewHolder(binding)
+            }
+        }
+
+        override fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)?
+        ) {
+            item?.let {
+                binding.item = item
+                binding.viewmodel = viewModel
+
+                it.options.forEachIndexed { index, option ->
+                    val radioButton = RadioButton(binding.root.context)
+                    radioButton.id = index
+                    radioButton.text = option
+                    binding.rbOptions.addView(radioButton)
+                }
+                binding.root.setOnClickListener { onItemClick?.invoke(item) }
+            }
+        }
+    }
+
+    private class MultiChoiceViewHolder(private val binding: LayoutMultiChoiceQuestionItemBinding) :
+        ViewHolder(binding) {
+
+        companion object {
+            // static method to create the instance of view holder.
+            fun from(parent: ViewGroup): MultiChoiceViewHolder {
+                val binding = LayoutMultiChoiceQuestionItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return MultiChoiceViewHolder(binding)
+            }
+        }
+
+        override fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)?
+        ) {
+            item?.let {
+                binding.item = item
+                binding.viewmodel = viewModel
+
+                it.options.forEachIndexed { index, option ->
+                    val checkBox = AppCompatCheckBox(binding.root.context)
+                    checkBox.id = index
+                    checkBox.text = option
+                    binding.llOptions.addView(checkBox)
+                }
+                binding.root.setOnClickListener { onItemClick?.invoke(item) }
             }
         }
     }

@@ -32,7 +32,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/layout_question_item" />
+                    tools:listitem="@layout/layout_simple_question_item" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/bt_next"

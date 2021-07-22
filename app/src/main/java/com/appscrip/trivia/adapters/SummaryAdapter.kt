@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.appscrip.trivia.data.db.entity.Question
-import com.appscrip.trivia.databinding.LayoutQuestionItemBinding
+import com.appscrip.trivia.databinding.LayoutSummaryItemBinding
 import com.appscrip.trivia.ui.questions.QuestionViewModel
 
 /**
@@ -23,7 +23,7 @@ class SummaryAdapter(private val viewModel: QuestionViewModel) :
     /**
      * ViewHolder binds each item to the view, the object of this class recycles.
      */
-    class ViewHolder(private val binding: LayoutQuestionItemBinding) :
+    class ViewHolder(private val binding: LayoutSummaryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         /**
@@ -42,7 +42,7 @@ class SummaryAdapter(private val viewModel: QuestionViewModel) :
         companion object {
             // static method to create the instance of view holder.
             fun from(parent: ViewGroup): ViewHolder {
-                val binding = LayoutQuestionItemBinding.inflate(
+                val binding = LayoutSummaryItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
