@@ -85,8 +85,14 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
                         }
                         questionList.add(
                             Question(
-                                id = questionList.size.toLong(),
+                                id = questionList.size.toLong() + 1,
                                 type = "summary"
+                            )
+                        )
+                        questionList.add(
+                            Question(
+                                id = questionList.size.toLong() + 1,
+                                type = "history"
                             )
                         )
                         repository.insert(questionList)
@@ -124,5 +130,9 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
                 }
             }
         }
+    }
+
+    fun storeTextResult(result: String?) {
+
     }
 }

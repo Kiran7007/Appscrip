@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.appscrip.trivia.R
 import com.appscrip.trivia.adapters.QuestionAdapter
 import com.appscrip.trivia.databinding.QuestionFragmentBinding
@@ -61,10 +60,16 @@ class QuestionFragment : Fragment() {
             var currentItem = binding.viewpager.currentItem
 
             if (currentItem < adapter.itemCount - 1) {
-                binding.viewpager.currentItem = ++currentItem
+                if (binding.btNext.text.toString().equals(getString(R.string.finish), false)) {
+                    binding.viewpager.currentItem = 0
+                } else {
+                    binding.viewpager.currentItem = ++currentItem
+                }
             }
-            if (currentItem == adapter.itemCount) {
+            if (currentItem == adapter.itemCount - 3) {
                 binding.btNext.text = getString(R.string.submit)
+            } else if (currentItem == adapter.itemCount - 2) {
+                binding.btNext.text = getString(R.string.finish)
             } else {
                 binding.btNext.text = getString(R.string.next)
             }

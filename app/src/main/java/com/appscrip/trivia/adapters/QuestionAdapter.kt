@@ -1,8 +1,9 @@
 package com.appscrip.trivia.adapters
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.RadioButton
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.databinding.ViewDataBinding
@@ -10,15 +11,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.appscrip.trivia.data.db.entity.Question
-import com.appscrip.trivia.databinding.LayoutMultiChoiceQuestionItemBinding
-import com.appscrip.trivia.databinding.LayoutSimpleQuestionItemBinding
-import com.appscrip.trivia.databinding.LayoutSingleChoiceQuestionItemBinding
+import com.appscrip.trivia.databinding.*
 import com.appscrip.trivia.ui.questions.QuestionViewModel
 
 
 private const val SIMPLE = 1
 private const val SINGLE_CHOICE = 2
 private const val MULTI_CHOICE = 3
+private const val SUMMARY = 4
+private const val HISTORY = 5
 
 /**
  * QuestionAdapter is responsible to covert question data into view by binding Issue model with the view.
@@ -30,6 +31,8 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
         return when (viewType) {
             SINGLE_CHOICE -> SingleChoiceViewHolder.from(parent)
             MULTI_CHOICE -> MultiChoiceViewHolder.from(parent)
+            SUMMARY -> SummaryViewHolder.from(parent)
+            HISTORY -> HistoryViewHolder.from(parent)
             else -> SimpleViewHolder.from(parent)
         }
     }
@@ -38,6 +41,8 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
         return when (getItem(position).type) {
             "single" -> SINGLE_CHOICE
             "multi" -> MULTI_CHOICE
+            "summary" -> SUMMARY
+            "history" -> HISTORY
             else -> SIMPLE
         }
     }
@@ -84,6 +89,15 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
             item?.let {
                 binding.item = item
                 binding.viewmodel = viewModel
+                binding.etAnswers.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        viewModel.storeTextResult(p0?.toString())
+                    }
+
+                    override fun afterTextChanged(p0: Editable?) {}
+                })
                 binding.root.setOnClickListener { onItemClick?.invoke(item) }
             }
         }
@@ -154,6 +168,62 @@ class QuestionAdapter(private val viewModel: QuestionViewModel) :
                     checkBox.text = option
                     binding.llOptions.addView(checkBox)
                 }
+                binding.root.setOnClickListener { onItemClick?.invoke(item) }
+            }
+        }
+    }
+
+    private class SummaryViewHolder(private val binding: LayoutSummaryItemBinding) :
+        ViewHolder(binding) {
+
+        companion object {
+            // static method to create the instance of view holder.
+            fun from(parent: ViewGroup): SummaryViewHolder {
+                val binding = LayoutSummaryItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return SummaryViewHolder(binding)
+            }
+        }
+
+        override fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)?
+        ) {
+            item?.let {
+                binding.item = item
+                binding.viewmodel = viewModel
+                binding.root.setOnClickListener { onItemClick?.invoke(item) }
+            }
+        }
+    }
+
+    private class HistoryViewHolder(private val binding: LayoutHistoryItemBinding) :
+        ViewHolder(binding) {
+
+        companion object {
+            // static method to create the instance of view holder.
+            fun from(parent: ViewGroup): HistoryViewHolder {
+                val binding = LayoutHistoryItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return HistoryViewHolder(binding)
+            }
+        }
+
+        override fun bind(
+            item: Question?,
+            viewModel: QuestionViewModel,
+            onItemClick: ((Question) -> Unit)?
+        ) {
+            item?.let {
+                binding.item = item
+                binding.viewmodel = viewModel
                 binding.root.setOnClickListener { onItemClick?.invoke(item) }
             }
         }

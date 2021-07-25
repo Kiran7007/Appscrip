@@ -38,7 +38,9 @@ data class Question(
     var answers: ArrayList<String> = ArrayList(),
 ) {
 
-    fun getQuestionText() =  "$order) $question"
+    fun getQuestionText() = "$order) $question"
+
+    fun getOptionsText() = "Answer: $options"
 
     companion object {
         fun fromJson(json: JSONObject): Question {

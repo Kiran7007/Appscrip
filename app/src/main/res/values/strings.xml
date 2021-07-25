@@ -3,5 +3,7 @@
     <string name="no_question_available">No question available!</string>
     <string name="no_comment_found">No comment found!</string>
     <string name="submit">Submit</string>
+    <string name="finish">Finish</string>
     <string name="next">Next</string>
+    <string name="here_are_the_answers">Here are the answers selected:</string>
 </resources>
