@@ -14,7 +14,6 @@ import com.appscrip.trivia.data.db.entity.Question
 import com.appscrip.trivia.databinding.*
 import com.appscrip.trivia.ui.questions.QuestionViewModel
 
-
 private const val SIMPLE = 1
 private const val SINGLE_CHOICE = 2
 private const val MULTI_CHOICE = 3

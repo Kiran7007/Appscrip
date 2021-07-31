@@ -10,8 +10,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="6dp"
             android:layout_margin="20dp"
+            app:cardElevation="6dp"
             app:cardMaxElevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,12 +36,22 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/bt_next"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="@string/next"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/bt_history"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/viewpager" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/bt_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/history"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/bt_next"
                     app:layout_constraintTop_toBottomOf="@id/viewpager" />
 
                 <androidx.appcompat.widget.AppCompatTextView

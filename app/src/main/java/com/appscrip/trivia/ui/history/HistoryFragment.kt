@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.appscrip.trivia.adapters.SummaryAdapter
+import com.appscrip.trivia.adapters.HistoryAdapter
 import com.appscrip.trivia.databinding.HistoryFragmentBinding
 import com.appscrip.trivia.ui.questions.QuestionIntent
-import com.appscrip.trivia.ui.questions.QuestionState
 import com.appscrip.trivia.ui.questions.QuestionViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -34,7 +33,7 @@ class HistoryFragment : Fragment() {
     /**
      * Converts the simple data into view and set to the recycler view.
      */
-    private lateinit var adapter: SummaryAdapter
+    private lateinit var adapter: HistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +53,7 @@ class HistoryFragment : Fragment() {
      * Initialize the view.
      */
     private fun initView() {
-        adapter = SummaryAdapter(viewModel)
+        adapter = HistoryAdapter(viewModel)
         binding.recyclerView.adapter = adapter
     }
 
@@ -65,20 +64,20 @@ class HistoryFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.historyState.collect {
                 when (it) {
-                    is QuestionState.Idle -> {
+                    is AnswerState.Idle -> {
                         viewModel.questionIntent.send(QuestionIntent.FetchHistory)
                     }
-                    is QuestionState.Loading -> {
+                    is AnswerState.Loading -> {
                         if (it.isLoading) {
                             setViewVisibility(View.GONE, View.GONE, View.VISIBLE)
                         } else {
                             setViewVisibility(View.VISIBLE, View.GONE, View.GONE)
                         }
                     }
-                    is QuestionState.Success -> {
+                    is AnswerState.Success -> {
                         adapter.submitList(it.list)
                     }
-                    is QuestionState.Error -> {
+                    is AnswerState.Error -> {
                         setViewVisibility(View.GONE, View.VISIBLE, View.GONE)
                         it.message?.let { message -> shoToast(message) }
                     }

@@ -29,13 +29,6 @@ data class Question(
     @Json(name = "options")
     @ColumnInfo(name = "options")
     var options: ArrayList<String> = ArrayList(),
-
-    @Json(name = "timestamp")
-    @ColumnInfo(name = "timestamp")
-    var timestamp: Long = 0,
-
-    @ColumnInfo(name = "answers")
-    var answers: ArrayList<String> = ArrayList(),
 ) {
 
     fun getQuestionText() = "$order) $question"

@@ -1,5 +1,6 @@
 package com.appscrip.trivia.data.repository
 
+import com.appscrip.trivia.data.db.entity.Answer
 import com.appscrip.trivia.data.db.entity.Question
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +13,11 @@ interface QuestionRepository {
      * Fetch the data from local database
      */
     fun fetchDataFromDB(): Flow<List<Question>>
+
+    /**
+     * Fetch the data from local database
+     */
+    fun fetchAnswersFromDB(): Flow<List<Answer>>
 
     /**
      * Update the issue entity in the database.

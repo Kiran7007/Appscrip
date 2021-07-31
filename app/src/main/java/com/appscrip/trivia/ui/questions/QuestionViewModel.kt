@@ -2,8 +2,10 @@ package com.appscrip.trivia.ui.questions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appscrip.trivia.data.db.entity.Answer
 import com.appscrip.trivia.data.db.entity.Question
 import com.appscrip.trivia.data.repository.QuestionRepository
+import com.appscrip.trivia.ui.history.AnswerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +25,8 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
     companion object {
         private val TAG = QuestionViewModel::class.java.simpleName
     }
+
+    val answerList = ArrayList<Answer>()
 
     /**
      * Observes the intent.
@@ -44,8 +48,8 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
     /**
      * Manage the history states.
      */
-    private val _historyState = MutableStateFlow<QuestionState>(QuestionState.Idle)
-    val historyState: StateFlow<QuestionState> get() = _historyState
+    private val _historyState = MutableStateFlow<AnswerState>(AnswerState.Idle)
+    val historyState: StateFlow<AnswerState> get() = _historyState
 
     init {
         handleIntent()
@@ -89,12 +93,6 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
                                 type = "summary"
                             )
                         )
-                        questionList.add(
-                            Question(
-                                id = questionList.size.toLong() + 1,
-                                type = "history"
-                            )
-                        )
                         repository.insert(questionList)
                     }
                 }
@@ -122,9 +120,9 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
      */
     private fun fetchHistoryFromLocal() {
         viewModelScope.launch {
-            repository.fetchDataFromDB().collect {
+            repository.fetchAnswersFromDB().collect {
                 if (!it.isNullOrEmpty()) {
-                    _historyState.value = QuestionState.Success(it)
+                    _historyState.value = AnswerState.Success(it)
                 } else {
                     //fetchDataFromRemote()
                 }
@@ -132,7 +130,11 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
         }
     }
 
-    fun storeTextResult(result: String?) {
+    fun saveAnswer(answer: Answer) {
+
+    }
+
+    fun submitAnswer(result: Answer) {
 
     }
 }

@@ -5,15 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.appscrip.trivia.data.db.entity.Answer
 import com.appscrip.trivia.data.db.entity.Question
+import com.appscrip.trivia.databinding.LayoutHistoryItemBinding
 import com.appscrip.trivia.databinding.LayoutSummaryItemBinding
 import com.appscrip.trivia.ui.questions.QuestionViewModel
 
 /**
- * CommentAdapter is responsible to covert question data into view by binding comment model with the view.
+ * HistoryAdapter is responsible to covert question data into view by binding comment model with the view.
  */
-class SummaryAdapter(private val viewModel: QuestionViewModel) :
-    ListAdapter<Question, SummaryAdapter.ViewHolder>(SummaryDiffCallBack()) {
+class HistoryAdapter(private val viewModel: QuestionViewModel) :
+    ListAdapter<Answer, HistoryAdapter.ViewHolder>(AnswerDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.from(parent)
 
@@ -23,13 +25,13 @@ class SummaryAdapter(private val viewModel: QuestionViewModel) :
     /**
      * ViewHolder binds each item to the view, the object of this class recycles.
      */
-    class ViewHolder(private val binding: LayoutSummaryItemBinding) :
+    class ViewHolder(private val binding: LayoutHistoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         /**
          * Bind the question model with the view.
          */
-        fun bind(item: Question?, viewModel: QuestionViewModel) {
+        fun bind(item: Answer?, viewModel: QuestionViewModel) {
             item?.let {
                 binding.item = item
                 binding.viewmodel = viewModel
@@ -42,7 +44,7 @@ class SummaryAdapter(private val viewModel: QuestionViewModel) :
         companion object {
             // static method to create the instance of view holder.
             fun from(parent: ViewGroup): ViewHolder {
-                val binding = LayoutSummaryItemBinding.inflate(
+                val binding = LayoutHistoryItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -55,11 +57,11 @@ class SummaryAdapter(private val viewModel: QuestionViewModel) :
     /**
      * SummaryDiffCallBack replace only those items in the list which is updated.
      */
-    class SummaryDiffCallBack : DiffUtil.ItemCallback<Question>() {
-        override fun areItemsTheSame(oldItem: Question, newItem: Question) =
-            oldItem.id == newItem.id
+    class AnswerDiffCallBack : DiffUtil.ItemCallback<Answer>() {
+        override fun areItemsTheSame(oldItem: Answer, newItem: Answer) =
+            oldItem.timestamp == newItem.timestamp
 
-        override fun areContentsTheSame(oldItem: Question, newItem: Question) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Answer, newItem: Answer) = oldItem == newItem
     }
 }
 

@@ -9,7 +9,7 @@
 
         <variable
             name="item"
-            type="com.appscrip.trivia.data.db.entity.Question" />
+            type="com.appscrip.trivia.data.db.entity.Answer" />
 
         <import type="android.view.View" />
     </data>
@@ -39,20 +39,38 @@
                 android:padding="10dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.getDateText()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.getNameText()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_date" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_question"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{item.question}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_answers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@{item.options.toString()}"
+                    android:text="@{item.getAnswersText()}"
                     android:textSize="10sp"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="parent"

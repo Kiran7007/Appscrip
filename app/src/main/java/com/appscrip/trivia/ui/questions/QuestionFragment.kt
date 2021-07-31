@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.appscrip.trivia.R
 import com.appscrip.trivia.adapters.QuestionAdapter
+import com.appscrip.trivia.data.db.entity.Answer
 import com.appscrip.trivia.databinding.QuestionFragmentBinding
 import com.appscrip.trivia.util.getQuestions
 import kotlinx.coroutines.flow.collect
@@ -59,20 +61,26 @@ class QuestionFragment : Fragment() {
         binding.btNext.setOnClickListener {
             var currentItem = binding.viewpager.currentItem
 
-            if (currentItem < adapter.itemCount - 1) {
+            if (currentItem < adapter.itemCount) {
                 if (binding.btNext.text.toString().equals(getString(R.string.finish), false)) {
+                    viewModel.submitAnswer(Answer())
                     binding.viewpager.currentItem = 0
+                    currentItem = 0
                 } else {
                     binding.viewpager.currentItem = ++currentItem
+                    viewModel.saveAnswer(Answer())
                 }
             }
-            if (currentItem == adapter.itemCount - 3) {
-                binding.btNext.text = getString(R.string.submit)
-            } else if (currentItem == adapter.itemCount - 2) {
+            if (currentItem == adapter.itemCount - 2) {
                 binding.btNext.text = getString(R.string.finish)
             } else {
                 binding.btNext.text = getString(R.string.next)
             }
+        }
+
+        binding.btHistory.setOnClickListener {
+            val action = QuestionFragmentDirections.actionQuestionFragmentToHistoryFragment()
+            findNavController().navigate(action);
         }
     }
 
